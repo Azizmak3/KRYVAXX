@@ -3,10 +3,29 @@ import React from 'react';
 import { Target, Zap, Shield, ArrowRight, AlertTriangle } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
+interface Tier {
+  name: string;
+  config: string;
+  target: string;
+  modules: string[];
+  results: string[];
+  crisis_case: {
+    title: string;
+    scenario: string;
+    action: string;
+    impact: string;
+  };
+  roi: string;
+  cta: string;
+  badge?: string;
+  icon: React.ReactNode;
+  style: string;
+}
+
 const TierSection: React.FC = () => {
   const { t } = useLanguage();
 
-  const systems = [
+  const systems: Tier[] = [
     { ...t.systems.s1, icon: <Target className="w-10 h-10" />, style: 'bg-white text-black border-black' },
     { ...t.systems.s2, icon: <Zap className="w-10 h-10" />, style: 'bg-blue-50 text-black border-blue-600' },
     { ...t.systems.s3, icon: <Shield className="w-10 h-10" />, style: 'bg-black text-white border-black' }

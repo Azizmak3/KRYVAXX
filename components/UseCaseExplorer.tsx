@@ -65,10 +65,10 @@ const UseCaseExplorer: React.FC = () => {
               
               {showTech && (
                 <div className="p-6 border border-zinc-800 bg-zinc-900/50 font-mono text-xs text-green-500 space-y-2 animate-in fade-in">
-                  <div>> STACK: NODE_JS / PYTHON_LLM</div>
-                  <div>> INTEGRATION: ZAPIER / HUBSPOT</div>
-                  <div>> LATENCY: 400MS</div>
-                  <div>> COMPLIANCE: GDPR_EU</div>
+                  <div>&gt; STACK: NODE_JS / PYTHON_LLM</div>
+                  <div>&gt; INTEGRATION: ZAPIER / HUBSPOT</div>
+                  <div>&gt; LATENCY: 400MS</div>
+                  <div>&gt; COMPLIANCE: GDPR_EU</div>
                 </div>
               )}
             </div>
