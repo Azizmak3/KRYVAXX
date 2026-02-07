@@ -1,0 +1,8 @@
+{
+  "name": "KRYVAX | INFRASTRUCTURE DE CRISE",
+  "description": "Systèmes d'infrastructure IA pour promoteurs immobiliers. Automatisation du cycle de vente en période de crise 2026.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
