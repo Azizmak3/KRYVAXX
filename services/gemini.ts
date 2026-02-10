@@ -35,7 +35,7 @@ export async function chatWithArchitect(message: string, history: { role: 'user'
   // 1. Verify API Key is present
   if (!process.env.API_KEY) {
     console.error("CRITICAL ERROR: API_KEY is missing from environment variables.");
-    return "## ERREUR_CONFIGURATION\n\nClé API non détectée. Veuillez configurer la variable d'environnement `API_KEY` dans votre interface de déploiement (Netlify/Vercel) avec une clé Google AI Studio valide.";
+    return "## ERREUR_CONFIGURATION\n\nClé API non détectée.\n\n**Action requise :**\n1. Ajoutez `API_KEY` dans les variables d'environnement Netlify.\n2. **Relancez le déploiement (Trigger Deploy)** pour que la clé soit prise en compte par le build.";
   }
 
   try {
