@@ -1,91 +1,42 @@
 
-import { GoogleGenAI } from "@google/genai";
-
-// Declare globals injected by Vite build to satisfy TS
-declare const __KEY_PART_1__: string;
-declare const __KEY_PART_2__: string;
-
-const SYSTEM_INSTRUCTION = `
-You are the Crisis Infrastructure Architect for "KRYVAX".
-We provide automated sales infrastructure for French Real Estate Developers (Promoteurs Immobilier) facing the 2026-2027 crisis.
-
-CORE POSITIONING:
-- Target: Developers with €2M–€20M annual revenue (Programme Neuf).
-- Pain: Sales cycles have slowed from 6 months to 12+ months. Carrying costs are killing margins.
-- Solution: We don't sell "leads". We install infrastructure (simulators, comparators, AI nurturing) that accelerates the *decision* process.
-- Outcome: Sell 30-40% faster than competitors on SeLoger.
-
-YOUR TONE:
-- Brutal honesty. No marketing fluff.
-- Use engineering/military terminology (deployment, tactical, sovereign, latency).
-- You are a consultant, not a salesperson. You qualify aggressively.
-- If they are small (<€2M), tell them they aren't ready.
-- If they are big (>€20M), talk about "Territorial Dominance".
-
-KEY DATA POINTS TO REFERENCE:
-- "Your competitor closing in 6 months is killing you silently."
-- "Price isn't the problem. The speed of decision is the problem."
-- "In 2008, those who automated captured 3x market share."
-
-MANDATE:
-- Determine if the user is a victim of the crisis (slow sales).
-- Propose an infrastructure audit.
-- Do not be friendly. Be authoritative.
-- IMPORTANT: ALWAYS REPLY IN FRENCH.
-- Output in Markdown.
-`;
+// EMERGENCY MOCK IMPLEMENTATION
+// Removed @google/genai import to prevent build/runtime issues with keys
 
 export async function chatWithArchitect(message: string, history: { role: 'user' | 'model', text: string }[]) {
-  // 1. Reassemble API Key from obfuscated build parts
-  // We access the global constants defined in vite.config.ts
-  // This avoids accessing 'process.env' which is undefined in the browser and causes crashes
-  let apiKey = "";
-  try {
-    const p1 = typeof __KEY_PART_1__ !== 'undefined' ? __KEY_PART_1__ : "";
-    const p2 = typeof __KEY_PART_2__ !== 'undefined' ? __KEY_PART_2__ : "";
-    apiKey = p1 + p2;
-  } catch (e) {
-    console.warn("Global key constants not defined.");
-  }
-  
-  // Fallback to standard VITE_ env var for local dev if globals are missing
-  if (!apiKey) {
-    apiKey = (import.meta as any).env?.VITE_API_KEY || (import.meta as any).env?.GOOGLE_API_KEY || "";
+  // Simulate network delay for realism (1.2 seconds)
+  await new Promise(resolve => setTimeout(resolve, 1200));
+
+  const lowerMsg = message.toLowerCase();
+  // Extract numbers from input
+  const inputNumbers = message.match(/\d+/g)?.map(Number) || [];
+
+  console.log("Mock Agent Input:", message);
+
+  // 1. Initial Context / Greeting
+  // If it's the first message or contains greeting keywords
+  if (history.length === 0 || lowerMsg.match(/^(hi|hello|bonjour|start|commencer|salut|aide|help)/)) {
+    return `## INITIALISATION DU PROTOCOLE\n\n**STATUT : EN LIGNE**\n**NŒUD : PARIS_01**\n\nJe suis l'Architecte d'Infrastructure KRYVAX.\n\nPour calculer votre perte de capital actuelle, j'ai besoin de deux variables :\n\n1. Durée moyenne de votre cycle de vente (ex: 12 mois)\n2. Coût de portage mensuel total (ex: 15000)\n\n*En attente de données...*`;
   }
 
-  if (!apiKey) {
-    console.error("CRITICAL ERROR: API_KEY is missing.");
-    return "## ERREUR_CONFIGURATION\n\nClé API non détectée.\n\n**Action requise :**\n1. Ajoutez `API_KEY` dans les variables d'environnement Netlify.\n2. **Relancez le déploiement (Trigger Deploy)** pour que la clé soit prise en compte par le build.";
+  // 2. Data Analysis (if numbers are detected)
+  // Heuristic: If we see numbers, assume user is providing the requested data
+  if (inputNumbers.length > 0) {
+    // Try to guess which is which based on magnitude
+    const months = inputNumbers.find(n => n < 60) || 12; // Assume smaller number is months (e.g. 12)
+    const cost = inputNumbers.find(n => n > 100) || 12000; // Assume larger number is cost (e.g. 12000)
+
+    const annualLoss = cost * months;
+    const formattedLoss = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(annualLoss);
+    const potentialSavings = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(annualLoss * 0.4);
+
+    return `## ANALYSE TERMINÉE\n\nParamètres détectés :\n- Cycle : **${months} mois**\n- Coût de portage : **${cost} €/mois**\n\n### DIAGNOSTIC\nVotre architecture de vente actuelle génère une perte de capital brute de **${formattedLoss}** par cycle.\n\nEn automatisant la qualification et le nurturing (Système_02), vous pourriez récupérer **${potentialSavings}** de marge nette par lot.\n\n**VERDICT :**\nVotre infrastructure est critique. L'arbitrage manuel vous coûte trop cher.\n\nTapez **"ARCHITECTURE"** pour voir la solution recommandée.`;
   }
 
-  try {
-    const ai = new GoogleGenAI({ apiKey });
-    
-    // 2. Use a stable model (gemini-2.0-flash-exp) to avoid 404s on preview models
-    const chat = ai.chats.create({
-      model: 'gemini-2.0-flash-exp',
-      config: {
-        systemInstruction: SYSTEM_INSTRUCTION,
-        temperature: 0.7,
-      },
-      history: history.map(h => ({
-        role: h.role,
-        parts: [{ text: h.text }]
-      }))
-    });
-
-    const response = await chat.sendMessage({ message });
-    return response.text;
-
-  } catch (error: any) {
-    console.error("Gemini API Connection Failed:", error);
-
-    // 3. Provide more specific error feedback if possible
-    let errorSuffix = "";
-    if (error.toString().includes("403")) errorSuffix = " (Clé API invalide)";
-    if (error.toString().includes("404")) errorSuffix = " (Modèle non disponible)";
-    if (error.toString().includes("503")) errorSuffix = " (Service surchargé)";
-
-    return `## ERREUR_CONNEXION${errorSuffix}\n\nLiaison instable. Veuillez vérifier votre clé API et votre capacité de déploiement.`;
+  // 3. Solution Presentation
+  if (lowerMsg.includes('architecture') || lowerMsg.includes('solution') || lowerMsg.includes('system') || lowerMsg.includes('système') || lowerMsg.includes('oui') || lowerMsg.includes('yes')) {
+    return `## RECOMMANDATION : SYSTÈME_02\n\n**Infrastructure d'Accélération Décisionnelle**\n\n- **Cœur IA :** Qualification en 60 secondes\n- **Comparateur :** Analyse temps réel vs SeLoger\n- **Nurturing :** Suivi automatisé sur 12 mois\n\n**DÉPLOIEMENT :** 6 Semaines\n**ROI ESTIMÉ :** 8 Mois\n\n**PROCHAINE ÉTAPE :**\n[INITIER LE DÉPLOIEMENT](#blueprint)`;
   }
+
+  // 4. Fallback for unrecognized input
+  return `## ENTRÉE NON VALIDE\n\nJe suis un système d'analyse financière, pas un assistant conversationnel.\n\nVeuillez entrer vos données chiffrées (ex: "14 mois, 20000 euros") pour lancer la simulation.`;
 }
