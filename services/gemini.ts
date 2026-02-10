@@ -1,6 +1,10 @@
 
 import { GoogleGenAI } from "@google/genai";
 
+// Declare globals injected by Vite build to satisfy TS
+declare const __KEY_PART_1__: string;
+declare const __KEY_PART_2__: string;
+
 const SYSTEM_INSTRUCTION = `
 You are the Crisis Infrastructure Architect for "KRYVAX".
 We provide automated sales infrastructure for French Real Estate Developers (Promoteurs Immobilier) facing the 2026-2027 crisis.
@@ -33,12 +37,21 @@ MANDATE:
 
 export async function chatWithArchitect(message: string, history: { role: 'user' | 'model', text: string }[]) {
   // 1. Reassemble API Key from obfuscated build parts
-  // We use bracket notation to access process.env to avoid TS issues with custom properties
-  const p1 = process.env['API_KEY_P1'] || "";
-  const p2 = process.env['API_KEY_P2'] || "";
+  // We access the global constants defined in vite.config.ts
+  // This avoids accessing 'process.env' which is undefined in the browser and causes crashes
+  let apiKey = "";
+  try {
+    const p1 = typeof __KEY_PART_1__ !== 'undefined' ? __KEY_PART_1__ : "";
+    const p2 = typeof __KEY_PART_2__ !== 'undefined' ? __KEY_PART_2__ : "";
+    apiKey = p1 + p2;
+  } catch (e) {
+    console.warn("Global key constants not defined.");
+  }
   
-  // Fallback to standard VITE_ env var if running locally via vite (where define might not be needed)
-  const apiKey = (p1 + p2) || (import.meta as any).env?.VITE_API_KEY || (import.meta as any).env?.GOOGLE_API_KEY;
+  // Fallback to standard VITE_ env var for local dev if globals are missing
+  if (!apiKey) {
+    apiKey = (import.meta as any).env?.VITE_API_KEY || (import.meta as any).env?.GOOGLE_API_KEY || "";
+  }
 
   if (!apiKey) {
     console.error("CRITICAL ERROR: API_KEY is missing.");

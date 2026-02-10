@@ -36,9 +36,10 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react()],
     define: {
-      // Inject split parts
-      'process.env.API_KEY_P1': JSON.stringify(keyPart1),
-      'process.env.API_KEY_P2': JSON.stringify(keyPart2)
+      // Inject split parts as global constants
+      // Using custom globals avoids 'process is not defined' errors in browser
+      '__KEY_PART_1__': JSON.stringify(keyPart1),
+      '__KEY_PART_2__': JSON.stringify(keyPart2)
     }
   }
 })
