@@ -32,25 +32,40 @@ MANDATE:
 `;
 
 export async function chatWithArchitect(message: string, history: { role: 'user' | 'model', text: string }[]) {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-  
-  const chat = ai.chats.create({
-    model: 'gemini-3-flash-preview',
-    config: {
-      systemInstruction: SYSTEM_INSTRUCTION,
-      temperature: 0.7,
-    },
-    history: history.map(h => ({
-      role: h.role,
-      parts: [{ text: h.text }]
-    }))
-  });
+  // 1. Verify API Key is present
+  if (!process.env.API_KEY) {
+    console.error("CRITICAL ERROR: API_KEY is missing from environment variables.");
+    return "## ERREUR_CONFIGURATION\n\nClé API non détectée. Veuillez configurer la variable d'environnement `API_KEY` dans votre interface de déploiement (Netlify/Vercel) avec une clé Google AI Studio valide.";
+  }
 
   try {
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    
+    // 2. Use a stable model (gemini-2.0-flash-exp) to avoid 404s on preview models
+    const chat = ai.chats.create({
+      model: 'gemini-2.0-flash-exp',
+      config: {
+        systemInstruction: SYSTEM_INSTRUCTION,
+        temperature: 0.7,
+      },
+      history: history.map(h => ({
+        role: h.role,
+        parts: [{ text: h.text }]
+      }))
+    });
+
     const response = await chat.sendMessage({ message });
     return response.text;
-  } catch (error) {
-    console.error("Gemini API Error:", error);
-    return "## ERREUR_CONNEXION\n\nLiaison instable. Veuillez vérifier manuellement votre capacité de déploiement.";
+
+  } catch (error: any) {
+    console.error("Gemini API Connection Failed:", error);
+
+    // 3. Provide more specific error feedback if possible
+    let errorSuffix = "";
+    if (error.toString().includes("403")) errorSuffix = " (Clé API invalide)";
+    if (error.toString().includes("404")) errorSuffix = " (Modèle non disponible)";
+    if (error.toString().includes("503")) errorSuffix = " (Service surchargé)";
+
+    return `## ERREUR_CONNEXION${errorSuffix}\n\nLiaison instable. Veuillez vérifier votre clé API et votre capacité de déploiement.`;
   }
 }
