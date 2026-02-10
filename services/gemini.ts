@@ -32,9 +32,13 @@ MANDATE:
 `;
 
 export async function chatWithArchitect(message: string, history: { role: 'user' | 'model', text: string }[]) {
-  // 1. Retrieve API Key with fallbacks
-  // We check process.env.API_KEY (injected by Vite define) and import.meta.env (Vite native)
-  const apiKey = process.env.API_KEY || (import.meta as any).env?.VITE_API_KEY || (import.meta as any).env?.GOOGLE_API_KEY;
+  // 1. Reassemble API Key from obfuscated build parts
+  // We use bracket notation to access process.env to avoid TS issues with custom properties
+  const p1 = process.env['API_KEY_P1'] || "";
+  const p2 = process.env['API_KEY_P2'] || "";
+  
+  // Fallback to standard VITE_ env var if running locally via vite (where define might not be needed)
+  const apiKey = (p1 + p2) || (import.meta as any).env?.VITE_API_KEY || (import.meta as any).env?.GOOGLE_API_KEY;
 
   if (!apiKey) {
     console.error("CRITICAL ERROR: API_KEY is missing.");
