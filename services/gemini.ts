@@ -32,14 +32,17 @@ MANDATE:
 `;
 
 export async function chatWithArchitect(message: string, history: { role: 'user' | 'model', text: string }[]) {
-  // 1. Verify API Key is present
-  if (!process.env.API_KEY) {
-    console.error("CRITICAL ERROR: API_KEY is missing from environment variables.");
+  // 1. Retrieve API Key with fallbacks
+  // We check process.env.API_KEY (injected by Vite define) and import.meta.env (Vite native)
+  const apiKey = process.env.API_KEY || (import.meta as any).env?.VITE_API_KEY || (import.meta as any).env?.GOOGLE_API_KEY;
+
+  if (!apiKey) {
+    console.error("CRITICAL ERROR: API_KEY is missing.");
     return "## ERREUR_CONFIGURATION\n\nClé API non détectée.\n\n**Action requise :**\n1. Ajoutez `API_KEY` dans les variables d'environnement Netlify.\n2. **Relancez le déploiement (Trigger Deploy)** pour que la clé soit prise en compte par le build.";
   }
 
   try {
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    const ai = new GoogleGenAI({ apiKey });
     
     // 2. Use a stable model (gemini-2.0-flash-exp) to avoid 404s on preview models
     const chat = ai.chats.create({

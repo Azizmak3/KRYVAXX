@@ -8,12 +8,20 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, '.', '');
   
   // FIX: Netlify injects environment variables into the Node process.env.
-  // loadEnv() only reads from local .env files (which are usually gitignored).
-  // We must check process.env.API_KEY to capture the value set in the Netlify Dashboard.
-  const apiKey = process.env.API_KEY || env.API_KEY;
+  // We search for multiple common naming conventions to ensure we catch the key.
+  const apiKey = process.env.API_KEY || 
+                 process.env.VITE_API_KEY || 
+                 process.env.GOOGLE_API_KEY || 
+                 process.env.GEMINI_API_KEY || 
+                 env.API_KEY || 
+                 env.VITE_API_KEY || 
+                 env.GOOGLE_API_KEY ||
+                 env.GEMINI_API_KEY;
 
   if (!apiKey) {
     console.warn("⚠️  WARNING: API_KEY is missing in the build environment. The chat feature will not work.");
+  } else {
+    console.log("✅ API_KEY detected in build environment.");
   }
 
   return {
