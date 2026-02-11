@@ -18,10 +18,13 @@ const Header: React.FC<HeaderProps> = ({ onOpenScan }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string, path: string) => {
     e.preventDefault();
     setIsMobileMenuOpen(false);
-    const targetId = href.replace('#', '');
+    
+    // Update URL without reload
+    window.history.pushState({}, '', path);
+
     const element = document.getElementById(targetId);
     if (element) {
       window.scrollTo({ top: element.offsetTop - 80, behavior: 'smooth' });
@@ -29,15 +32,16 @@ const Header: React.FC<HeaderProps> = ({ onOpenScan }) => {
   };
 
   const navLinks = [
-    { label: 'AI TERMINAL', href: '#terminal' },
-    { label: language === 'en' ? 'LEAD FORM' : 'FORMULAIRE', href: '#blueprint' },
-    { label: t.nav.calculateRoi, href: '#diagnostic' },
-    { label: t.nav.caseStudies, href: '#cases' },
-    { label: t.nav.whatWeBuild, href: '#pricing' },
+    { label: 'AI TERMINAL', id: 'terminal', path: '/AI-terminal' },
+    { label: language === 'en' ? 'LEAD FORM' : 'FORMULAIRE', id: 'blueprint', path: '/audit' },
+    { label: t.nav.calculateRoi, id: 'diagnostic', path: '/diagnostic' },
+    { label: t.nav.caseStudies, id: 'cases', path: '/cases' },
+    { label: t.nav.whatWeBuild, id: 'pricing', path: '/systems' },
   ];
 
   const handleInitiateClick = () => {
     // Direct to the Lead Form (Blueprint section)
+    window.history.pushState({}, '', '/audit');
     const el = document.getElementById('blueprint');
     if (el) window.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' });
     setIsMobileMenuOpen(false);
@@ -47,7 +51,7 @@ const Header: React.FC<HeaderProps> = ({ onOpenScan }) => {
     <nav className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${isScrolled ? 'bg-slate-900 border-b-4 border-black py-4' : 'bg-white py-8'}`}>
       <div className="max-w-[1440px] mx-auto px-6 flex justify-between items-center relative">
         {/* Logo */}
-        <a href="#home" onClick={(e) => handleLinkClick(e, '#home')} className="flex items-center shrink-0">
+        <a href="/" onClick={(e) => handleLinkClick(e, 'home', '/')} className="flex items-center shrink-0">
           <span className={`text-3xl font-black tracking-tight uppercase leading-none transition-colors ${isScrolled ? 'text-white' : 'text-black'}`}>KRYVAX</span>
         </a>
 
@@ -56,8 +60,8 @@ const Header: React.FC<HeaderProps> = ({ onOpenScan }) => {
           {navLinks.map((link, i) => (
             <a
               key={i}
-              href={link.href}
-              onClick={(e) => handleLinkClick(e, link.href)}
+              href={link.path}
+              onClick={(e) => handleLinkClick(e, link.id, link.path)}
               className={`text-[11px] font-black uppercase tracking-[0.2em] transition-colors ${isScrolled ? 'text-slate-300 hover:text-white' : 'text-slate-500 hover:text-black'}`}
             >
               {link.label}
@@ -103,8 +107,8 @@ const Header: React.FC<HeaderProps> = ({ onOpenScan }) => {
             {navLinks.map((link, i) => (
               <div key={i} className={`border-b ${isScrolled ? 'border-slate-700/20' : 'border-slate-100'} pb-4`}>
                 <a
-                  href={link.href}
-                  onClick={(e) => handleLinkClick(e, link.href)}
+                  href={link.path}
+                  onClick={(e) => handleLinkClick(e, link.id, link.path)}
                   className="block w-full py-4 text-left text-xl font-black uppercase tracking-widest"
                 >
                   {link.label}
