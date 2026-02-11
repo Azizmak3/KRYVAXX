@@ -29,14 +29,16 @@ const Header: React.FC<HeaderProps> = ({ onOpenScan }) => {
   };
 
   const navLinks = [
-    { label: t.nav.calculateRoi, href: '#diagnostic' },
     { label: 'AI TERMINAL', href: '#terminal' },
+    { label: language === 'en' ? 'LEAD FORM' : 'FORMULAIRE', href: '#blueprint' },
+    { label: t.nav.calculateRoi, href: '#diagnostic' },
     { label: t.nav.caseStudies, href: '#cases' },
     { label: t.nav.whatWeBuild, href: '#pricing' },
   ];
 
   const handleInitiateClick = () => {
-    const el = document.getElementById('ultimatum');
+    // Direct to the Lead Form (Blueprint section)
+    const el = document.getElementById('blueprint');
     if (el) window.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' });
     setIsMobileMenuOpen(false);
   };

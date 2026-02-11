@@ -190,6 +190,7 @@ const Portfolio: React.FC<PortfolioProps> = ({ onOpenScan, onSuccess }) => {
           </div>
         </div>
 
+        {/* Lead Form Section with ID for Sitelinks */}
         <div id="blueprint" className="bg-slate-900 text-white p-32 lg:p-48 relative overflow-hidden border-t-[16px] border-blue-700 shadow-3xl">
           <div className="max-w-6xl mx-auto">
             {qualificationStatus === 'IDLE' ? (
