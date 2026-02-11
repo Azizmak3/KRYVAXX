@@ -156,6 +156,24 @@ const ServiceAgent: React.FC = () => {
                                 ul: ({node, ...props}) => <ul className="list-disc pl-4 space-y-1 mt-2" {...props} />,
                                 li: ({node, ...props}) => <li className="" {...props} />,
                                 p: ({node, ...props}) => <p className="mb-2 last:mb-0" {...props} />,
+                                a: ({node, ...props}) => (
+                                  <a 
+                                    {...props} 
+                                    className="text-blue-600 underline decoration-2 underline-offset-4 hover:text-blue-800 transition-colors cursor-pointer bg-white px-1"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      const href = props.href;
+                                      if (href && href.startsWith('#')) {
+                                        const element = document.getElementById(href.substring(1));
+                                        if (element) {
+                                          element.scrollIntoView({ behavior: 'smooth' });
+                                        }
+                                      } else if (href) {
+                                        window.open(href, '_blank');
+                                      }
+                                    }}
+                                  />
+                                )
                               }}
                             >
                               {msg.text}

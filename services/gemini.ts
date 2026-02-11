@@ -8,6 +8,10 @@ export async function chatWithArchitect(message: string, history: { role: 'user'
 
   const lowerMsg = message.toLowerCase();
   const inputNumbers = message.match(/\d+/g)?.map(Number) || [];
+  const currentVal = inputNumbers.length > 0 ? inputNumbers[0] : null;
+
+  // Helper for formatting currency
+  const formatEUR = (num: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(num);
 
   // --- CONVERSATIONAL INTELLIGENCE ENGINE ---
 
@@ -29,26 +33,51 @@ export async function chatWithArchitect(message: string, history: { role: 'user'
     return `**LE COÛT DE L'INACTION**\n\nVous regardez l'investissement (CAPEX) alors que vous devriez regarder l'hémorragie (OPEX).\n\nChaque mois où votre stock ne tourne pas vous coûte entre 8 000 € et 15 000 € de frais de portage par programme. Le Système_02 coûte une fraction de ce que vous perdez *déjà* en attendant.\n\nLa question n'est pas "combien ça coûte", mais **"combien de temps pouvez-vous encore vous permettre d'attendre ?"**\n\nOn continue l'audit ?`;
   }
 
-  // 4. DATA INPUT HANDLER
-  if (inputNumbers.length > 0) {
-    const val = inputNumbers[0];
+  // 4. DATA INPUT HANDLER & DYNAMIC CALCULATION
+  // Determine context from history to know which step we are in
+  const lastSystemMessage = [...history].reverse().find(m => m.role === 'model')?.text || '';
 
-    // SCENARIO A: CYCLE LENGTH (Likely < 60)
-    // Context: User inputs "12 months" or just "12"
-    if (val < 60) {
-       if (val > 8) {
-         return `**ALERTE CRITIQUE : CYCLE LENT**\n\nVous êtes à **${val} mois**. C'est dangereux. La moyenne performante du marché est descendue à 6-8 mois grâce à l'automatisation.\n\nCela signifie que **vos concurrents encaissent leur marge 2x plus vite que vous**.\n\nCe retard grignote votre trésorerie. Pour vous donner une solution précise : **Quel est votre coût de portage mensuel estimé (frais financiers + frais fixes) ?**`;
-       } else {
-         return `**VÉLOCITÉ DÉTECTÉE : CORRECTE**\n\n${val} mois est un cycle standard. Mais attention : est-ce obtenu par épuisement de vos équipes ou par infrastructure ?\n\nSi vous dépendez de l'humain pour maintenir ce rythme, vous êtes vulnérable au turnover. Le Système_02 sécurise cette performance.\n\n**Quel est votre coût de portage mensuel pour maintenir ce rythme ?**`;
-       }
-    }
+  // Context A: User just answered Cycle Duration?
+  // Previous system msg asked for "cycle de vente" or "durée moyenne"
+  // And it was NOT "Response 1" (which asks for Cost)
+  const askedForCycle = (lastSystemMessage.includes("durée moyenne") || lastSystemMessage.includes("cycle de vente")) && !lastSystemMessage.includes("COÛT DE PORTAGE");
 
-    // SCENARIO B: FINANCIAL COST (Likely >= 100)
-    // Context: User inputs "10000" or "15000"
-    if (val >= 60) {
-      const formattedAmount = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(val);
-      return `**DIAGNOSTIC TERMINÉ : URGENCE CONFIRMÉE**\n\nVoici la réalité crue : Vous perdez **${formattedAmount}** chaque mois par simple friction administrative.\n\nSur un cycle complet, vous brûlez l'équivalent de la marge nette de 2 appartements. C'est mathématique : votre infrastructure actuelle détruit votre profit.\n\nLe Système_02 inverse cette dynamique en 6 semaines.\n\n**Il est temps d'intervenir.**\n\n[INITIER LE DÉPLOIEMENT MAINTENANT](#blueprint)`;
-    }
+  // Context B: User just answered Monthly Cost?
+  // Previous system msg asked for "COÛT DE PORTAGE" or "coût"
+  const askedForCost = lastSystemMessage.includes("COÛT DE PORTAGE") || lastSystemMessage.includes("Quel est votre coût");
+
+  if (currentVal !== null) {
+      
+      // CASE: RESPONSE 2 (FINAL CALCULATION)
+      if (askedForCost) {
+          const monthlyCost = currentVal;
+          
+          // Retrieve cycle duration from history (It was the user message BEFORE the last system message)
+          const userMessages = history.filter(m => m.role === 'user');
+          const lastUserMsg = userMessages[userMessages.length - 1]; // The message that answered the cycle question
+          const cycleDuration = lastUserMsg?.text.match(/\d+/)?.[0] ? Number(lastUserMsg.text.match(/\d+/)?.[0]) : 12; // Fallback to 12 if parse fails
+
+          const lossPerCycle = cycleDuration * monthlyCost;
+          const equivalentUnits = Math.floor(lossPerCycle / 150000); // 150k margin assumption
+          const tenLotsLoss = lossPerCycle * 10;
+          const savingStart = lossPerCycle * 6; // Logic from prompt
+
+          return `**DIAGNOSTIC TERMINÉ : URGENCE CONFIRMÉE**\n\nFaisons le calcul que personne ne fait :\n\n- Cycle actuel : **${cycleDuration} MOIS**\n- Portage mensuel : **${formatEUR(monthlyCost)}**\n- Perte par cycle : **${formatEUR(lossPerCycle)}**\n\nSur 10 lots, vous brûlez **${formatEUR(tenLotsLoss)}** en friction pure. C'est l'équivalent de la marge nette de **${equivalentUnits} appartements**. Vous les vendez pour financer votre lenteur.\n\nJim Simons a prouvé que l'avantage systémique bat tout. Vos concurrents ont un système. Vous avez une méthode manuelle. C'est comme trader contre Renaissance avec Excel.\n\nLe Système_02 inverse cette dynamique en 6 semaines.\n\n**Coût : 28 000 €**\n**ROI : Économie de ${formatEUR(savingStart)} sur les 6 prochains lots**\n\nJamie Dimon appellerait ça un "no-brainer". George Soros vous dirait : "Le marché perçoit votre lenteur. Cette perception DEVIENT la réalité. Les acheteurs sérieux vont voir vos concurrents d'abord."\n\n**IL EST TEMPS D'INTERVENIR.**\n\n[INITIER LE DÉPLOIEMENT →](#blueprint)`;
+      }
+
+      // CASE: RESPONSE 1 (VELOCITY CHECK)
+      // If we asked for cycle, or if it's the first number provided in a conversational flow
+      if (askedForCycle || history.length <= 2) {
+          const cycleDuration = currentVal;
+          const competitorCycle = Math.floor(cycleDuration * 0.6); // 40% faster
+          const percentSlower = competitorCycle > 0 ? Math.round(((cycleDuration / competitorCycle) - 1) * 100) : 100;
+
+          const status = cycleDuration <= 6 ? 'STANDARD' : cycleDuration <= 9 ? 'PROBLÉMATIQUE' : 'CRITIQUE';
+          const verdict = cycleDuration <= 6 ? 'correct' : 'lent';
+          const reality = cycleDuration <= 6 ? '"correct" = mort lente' : 'vous êtes déjà mort';
+
+          return `**VÉLOCITÉ DÉTECTÉE : ${status}**\n\n**${cycleDuration} mois** est ${verdict}. Mais écoutez : dans le marché actuel, ${reality}.\n\nVos concurrents qui closent en **${competitorCycle} mois** capturent les acheteurs sérieux. Vous récupérez ce qui reste.\n\nLarry Fink dirait : "Où est votre alpha? Vous avez le même produit, le même prix, mais vous prenez **${percentSlower}% plus de temps**. Vous êtes un actif sous-performant."\n\n**QUEL EST VOTRE COÛT DE PORTAGE MENSUEL ? (en €)**\nCombien vous coûte un programme non-vendu chaque mois : charges, financement, équipe ?`;
+      }
   }
 
   // 5. AGREEMENT / DEPLOYMENT ("Oui", "Go", "Je veux", "Ok")

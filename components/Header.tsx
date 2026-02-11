@@ -30,6 +30,7 @@ const Header: React.FC<HeaderProps> = ({ onOpenScan }) => {
 
   const navLinks = [
     { label: t.nav.calculateRoi, href: '#diagnostic' },
+    { label: 'AI TERMINAL', href: '#terminal' },
     { label: t.nav.caseStudies, href: '#cases' },
     { label: t.nav.whatWeBuild, href: '#pricing' },
   ];

@@ -10,12 +10,19 @@ import ServiceAgent from './components/ServiceAgent'; // AI Audit Terminal (Chat
 import FinalUltimatum from './components/FinalUltimatum'; // Final CTA
 import Footer from './components/Footer';
 import MarketScanModal from './components/MarketScanModal';
+import Portfolio from './components/Portfolio'; // Re-added Portfolio as it was missing in the previous App.tsx but present in files list.
+import ThankYou from './components/ThankYou';
 import { LanguageProvider } from './context/LanguageContext';
 
 function AppContent() {
   const [isScanModalOpen, setIsScanModalOpen] = useState(false);
+  const [showThankYou, setShowThankYou] = useState(false);
 
   const openScan = () => setIsScanModalOpen(true);
+
+  if (showThankYou) {
+    return <ThankYou onBack={() => setShowThankYou(false)} />;
+  }
 
   return (
     <div className="min-h-screen bg-white text-black selection:bg-blue-600 selection:text-white font-sans">
@@ -37,10 +44,13 @@ function AppContent() {
         {/* 5. Filter: Brutal Disqualification */}
         <WhoThisIsFor />
 
-        {/* 6. Audit Terminal: AI Architect Chatbot */}
+        {/* 6. Portfolio / Signals / Form */}
+        <Portfolio onOpenScan={openScan} onSuccess={() => setShowThankYou(true)} />
+
+        {/* 7. Audit Terminal: AI Architect Chatbot */}
         <ServiceAgent />
 
-        {/* 7. Ultimatum: Two Paths */}
+        {/* 8. Ultimatum: Two Paths */}
         <FinalUltimatum />
       </main>
 

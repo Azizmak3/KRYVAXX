@@ -1,10 +1,13 @@
 
 import React, { useState } from 'react';
-import { CheckCircle2, ArrowRight, Loader2, UserCheck, Calculator, ShieldAlert, XCircle, FileText, Lock, Activity } from 'lucide-react';
+import { CheckCircle2, ArrowRight, Loader2, UserCheck, Activity, ShieldAlert, XCircle } from 'lucide-react';
 import UseCaseExplorer from './UseCaseExplorer';
 import { useLanguage } from '../context/LanguageContext';
 
-interface PortfolioProps {onOpenScan: () => void;}
+interface PortfolioProps {
+  onOpenScan: () => void;
+  onSuccess?: () => void;
+}
 
 const signals = [
   {
@@ -33,23 +36,21 @@ const signals = [
   }
 ];
 
-const Portfolio: React.FC<PortfolioProps> = ({ onOpenScan }) => {
+const Portfolio: React.FC<PortfolioProps> = ({ onOpenScan, onSuccess }) => {
   const { t, language } = useLanguage();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [qualificationStatus, setQualificationStatus] = useState<'IDLE' | 'QUALIFYING' | 'UNQUALIFIED' | 'SUCCESS'>('IDLE');
   
   const [formData, setFormData] = useState({
-    name: '',
+    lastName: '',
+    firstName: '',
     email: '',
+    phone: '',
     company: '',
-    revenue: '',
-    spend: '',
-    role: '',
-    capital: 'No',
-    timeline: 'Exploring'
+    revenue: ''
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -57,16 +58,17 @@ const Portfolio: React.FC<PortfolioProps> = ({ onOpenScan }) => {
     e.preventDefault();
     setIsSubmitting(true);
     
+    // Simulate API call
     setTimeout(() => {
       setIsSubmitting(false);
-      const isRevenueQualified = formData.revenue !== '' && formData.revenue !== '<€100K';
-      const isCapitalQualified = ['Yes', 'Maybe'].includes(formData.capital);
-      const isDecisionMaker = ['Founder/CEO', 'CFO', 'CTO/COO', 'C-Suite'].includes(formData.role);
-
-      if (isRevenueQualified && isCapitalQualified && isDecisionMaker) {
-        setQualificationStatus('SUCCESS');
+      
+      // Basic qualification check (can be expanded)
+      const isQualified = formData.revenue !== '€2M-€5M' && formData.revenue !== '' && formData.company.length > 2;
+      
+      if (onSuccess) {
+        onSuccess();
       } else {
-        setQualificationStatus('UNQUALIFIED');
+         setQualificationStatus('SUCCESS');
       }
     }, 1500);
   };
@@ -103,8 +105,6 @@ const Portfolio: React.FC<PortfolioProps> = ({ onOpenScan }) => {
 
         {/* Unified social proof block */}
         <div className="mb-40 space-y-20">
-          <UseCaseExplorer />
-          
           <div className="space-y-6">
             <div className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 italic">
               {language === 'en' 
@@ -112,7 +112,7 @@ const Portfolio: React.FC<PortfolioProps> = ({ onOpenScan }) => {
                 : "« Ces résultats ne sont pas des projections. Ce sont des résultats audités après déploiement. »"}
             </div>
             
-            {/* Signal Feed Table (Merged) */}
+            {/* Signal Feed Table */}
             <div className="border-4 border-black overflow-hidden shadow-[16px_16px_0px_0px_rgba(0,51,255,0.05)]">
               <div className="p-8 bg-slate-900 text-white flex justify-between items-center border-b-4 border-black">
                 <div className="flex items-center space-x-4">
@@ -177,53 +177,51 @@ const Portfolio: React.FC<PortfolioProps> = ({ onOpenScan }) => {
                 <div className="space-y-6">
                   <div className="flex items-center space-x-4 text-blue-400">
                     <ShieldAlert className="w-8 h-8" />
-                    <h2 className="text-6xl font-black tracking-tighter uppercase leading-none">{t.portfolio.blueprint.form.protocol}</h2>
+                    <h2 className="text-6xl font-black tracking-tighter uppercase leading-none">
+                      {language === 'en' ? 'LEAD CAPTURE PROTOCOL' : 'PROTOCOLE D\'ENREGISTREMENT'}
+                    </h2>
                   </div>
                   <p className="text-slate-500 text-sm font-mono uppercase tracking-[0.5em] font-black">{t.portfolio.blueprint.form.sub}</p>
                 </div>
                 <form onSubmit={handleQualify} className="grid grid-cols-1 md:grid-cols-2 gap-12">
                   <div className="space-y-4">
-                    <label className="text-xs font-black text-slate-500 uppercase">{t.portfolio.blueprint.form.revBand}</label>
+                    <label className="text-xs font-black text-slate-500 uppercase">{language === 'en' ? 'Last Name' : 'Nom'}</label>
+                    <input required name="lastName" value={formData.lastName} onChange={handleInputChange} className="w-full bg-slate-800 border-4 border-slate-700 p-8 text-white text-xl font-black" placeholder="EX: DUPONT" />
+                  </div>
+                  <div className="space-y-4">
+                    <label className="text-xs font-black text-slate-500 uppercase">{language === 'en' ? 'First Name' : 'Prénom'}</label>
+                    <input required name="firstName" value={formData.firstName} onChange={handleInputChange} className="w-full bg-slate-800 border-4 border-slate-700 p-8 text-white text-xl font-black" placeholder="EX: JEAN" />
+                  </div>
+                  <div className="space-y-4">
+                    <label className="text-xs font-black text-slate-500 uppercase">{language === 'en' ? 'Professional Email' : 'Email Professionnel'}</label>
+                    <input required type="email" name="email" value={formData.email} onChange={handleInputChange} className="w-full bg-slate-800 border-4 border-slate-700 p-8 text-white text-xl font-black" placeholder="jean.dupont@societe.com" />
+                  </div>
+                  <div className="space-y-4">
+                    <label className="text-xs font-black text-slate-500 uppercase">{language === 'en' ? 'Phone' : 'Téléphone'}</label>
+                    <input required type="tel" name="phone" value={formData.phone} onChange={handleInputChange} className="w-full bg-slate-800 border-4 border-slate-700 p-8 text-white text-xl font-black" placeholder="06 12 34 56 78" />
+                  </div>
+                  <div className="space-y-4">
+                    <label className="text-xs font-black text-slate-500 uppercase">{language === 'en' ? 'Company' : 'Société'}</label>
+                    <input required name="company" value={formData.company} onChange={handleInputChange} className="w-full bg-slate-800 border-4 border-slate-700 p-8 text-white text-xl font-black" placeholder="EX: KRYVAX IMMOBILIER" />
+                  </div>
+                  <div className="space-y-4">
+                    <label className="text-xs font-black text-slate-500 uppercase">{language === 'en' ? 'Annual Revenue' : 'CA Annuel'}</label>
                     <select required name="revenue" value={formData.revenue} onChange={handleInputChange} className="w-full bg-slate-800 border-4 border-slate-700 p-8 text-white text-xl font-black">
                       <option value="">{t.portfolio.blueprint.form.sel}</option>
-                      <option value="<€100K">{t.portfolio.blueprint.form.under}</option>
-                      <option value="€100K-€500K">€100K–€500K</option>
-                      <option value="€500K-€2M">€500K–€2M</option>
-                      <option value="€2M-€10M">€2M–€10M</option>
-                      <option value="€10M+">€10M+</option>
+                      <option value="€2M-€5M">€2M – €5M</option>
+                      <option value="€5M-€10M">€5M – €10M</option>
+                      <option value="€10M-€20M">€10M – €20M</option>
+                      <option value="€20M+">€20M+</option>
                     </select>
                   </div>
-                  <div className="space-y-4">
-                    <label className="text-xs font-black text-slate-500 uppercase">{t.portfolio.blueprint.form.monthly}</label>
-                    <input required name="spend" placeholder="e.g. €3,000" value={formData.spend} onChange={handleInputChange} className="w-full bg-slate-800 border-4 border-slate-700 p-8 text-white text-xl font-black" />
-                  </div>
-                  <div className="space-y-4">
-                    <label className="text-xs font-black text-slate-500 uppercase">{t.portfolio.blueprint.form.cap}</label>
-                    <select required name="capital" value={formData.capital} onChange={handleInputChange} className="w-full bg-slate-800 border-4 border-slate-700 p-8 text-white text-xl font-black">
-                      <option value="No">{t.portfolio.blueprint.form.notYet}</option>
-                      <option value="Maybe">{t.portfolio.blueprint.form.maybe}</option>
-                      <option value="Yes">{t.portfolio.blueprint.form.ready}</option>
-                    </select>
-                  </div>
-                  <div className="space-y-4">
-                    <label className="text-xs font-black text-slate-500 uppercase">{t.portfolio.blueprint.form.role}</label>
-                    <select required name="role" value={formData.role} onChange={handleInputChange} className="w-full bg-slate-800 border-4 border-slate-700 p-8 text-white text-xl font-black">
-                      <option value="">{t.portfolio.blueprint.form.selRole}</option>
-                      <option value="Founder/CEO">Founder / CEO</option>
-                      <option value="CFO">CFO</option>
-                      <option value="CTO/COO">CTO / COO</option>
-                      <option value="C-Suite">Other C-Suite</option>
-                      <option value="DeptHead">Department Head</option>
-                      <option value="Other">Other (Audit Required)</option>
-                    </select>
-                  </div>
+
                   <div className="md:col-span-2 pt-10">
                     <button 
                       disabled={isSubmitting}
                       type="submit" 
-                      className="w-full bg-white text-black py-14 text-2xl font-black uppercase tracking-[0.5em] hover:bg-blue-600 hover:text-white transition-all flex items-center justify-center space-x-10 shadow-[24px_24px_0px_0px_rgba(0,0,0,0.4)]"
+                      className="w-full bg-white text-black py-14 text-2xl font-black uppercase tracking-[0.3em] hover:bg-blue-600 hover:text-white transition-all flex items-center justify-center space-x-10 shadow-[24px_24px_0px_0px_rgba(0,0,0,0.4)]"
                     >
-                      {isSubmitting ? <Loader2 className="w-12 h-12 animate-spin" /> : <span>{t.portfolio.blueprint.form.verify}</span>}
+                      {isSubmitting ? <Loader2 className="w-12 h-12 animate-spin" /> : <span>{language === 'en' ? 'BOOK TECHNICAL AUDIT (30 MIN)' : 'RÉSERVER AUDIT TECHNIQUE (30 MIN)'}</span>}
                       {!isSubmitting && <ArrowRight className="w-12 h-12" />}
                     </button>
                   </div>
@@ -241,20 +239,12 @@ const Portfolio: React.FC<PortfolioProps> = ({ onOpenScan }) => {
                 </div>
               </div>
             ) : (
+              // Success state is now handled by parent App.tsx showing ThankYou component, 
+              // but keeping this as fallback or if onPage behavior is preferred.
               <div className="text-center py-24 space-y-12 animate-in zoom-in duration-500">
                 <CheckCircle2 className="w-32 h-32 text-green-500 mx-auto" />
                 <h2 className="text-7xl font-black tracking-tighter uppercase leading-none">{t.portfolio.blueprint.success.title}</h2>
                 <p className="text-slate-400 text-3xl max-w-2xl mx-auto">{t.portfolio.blueprint.success.desc}</p>
-                <div className="pt-12 grid grid-cols-1 md:grid-cols-2 gap-8 text-left max-w-4xl mx-auto">
-                  <div className="bg-slate-800 p-8 border-4 border-slate-700">
-                    <div className="text-[10px] font-black uppercase text-blue-400 mb-2">{t.portfolio.blueprint.success.next}</div>
-                    <div className="text-xl font-black uppercase">{t.portfolio.blueprint.success.step}</div>
-                  </div>
-                  <div className="bg-slate-800 p-8 border-4 border-slate-700">
-                    <div className="text-[10px] font-black uppercase text-blue-400 mb-2">{t.portfolio.blueprint.success.timeline}</div>
-                    <div className="text-xl font-black uppercase">{t.portfolio.blueprint.success.time}</div>
-                  </div>
-                </div>
               </div>
             )}
           </div>
