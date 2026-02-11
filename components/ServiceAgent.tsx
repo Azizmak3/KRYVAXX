@@ -49,6 +49,37 @@ const ServiceAgent: React.FC = () => {
     }
   };
 
+  // Function to extract data from history and initiate audit
+  const initiateAudit = () => {
+    // Basic extraction logic based on expected conversation flow
+    const userMsgs = messages.filter(m => m.role === 'user');
+    const extractNumber = (text: string) => text.match(/\d+([.,]\d+)?/)?.[0]?.replace(',', '.') || '0';
+
+    const cycle = userMsgs.length > 0 ? extractNumber(userMsgs[0].text) : '0';
+    const cost = userMsgs.length > 1 ? extractNumber(userMsgs[1].text) : '0';
+    const projects = userMsgs.length > 2 ? extractNumber(userMsgs[2].text) : '0';
+    
+    // Calculate derived metrics for the form
+    const cycleNum = Number(cycle);
+    const costNum = Number(cost);
+    const projectsNum = Number(projects);
+    const friction = cycleNum * costNum * projectsNum;
+    
+    // Store in session storage
+    sessionStorage.setItem('terminalData', JSON.stringify({
+      cycleDuration: cycle,
+      carryingCost: cost,
+      numberOfProjects: projects,
+      calculatedFriction: friction
+    }));
+
+    // Navigate to form
+    const element = document.getElementById('blueprint');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section id="terminal" className="py-24 lg:py-48 px-6 bg-white border-b-4 border-black">
       <div className="max-w-[1440px] mx-auto">
@@ -162,14 +193,17 @@ const ServiceAgent: React.FC = () => {
                                     className="text-blue-600 underline decoration-2 underline-offset-4 hover:text-blue-800 transition-colors cursor-pointer bg-white px-1"
                                     onClick={(e) => {
                                       e.preventDefault();
-                                      const href = props.href;
-                                      if (href && href.startsWith('#')) {
-                                        const element = document.getElementById(href.substring(1));
-                                        if (element) {
-                                          element.scrollIntoView({ behavior: 'smooth' });
+                                      if (props.href === '#blueprint') {
+                                        initiateAudit();
+                                      } else {
+                                        // Standard link handling
+                                        const href = props.href;
+                                        if (href && href.startsWith('#')) {
+                                          const element = document.getElementById(href.substring(1));
+                                          if (element) element.scrollIntoView({ behavior: 'smooth' });
+                                        } else if (href) {
+                                          window.open(href, '_blank');
                                         }
-                                      } else if (href) {
-                                        window.open(href, '_blank');
                                       }
                                     }}
                                   />
