@@ -23,7 +23,7 @@ interface Tier {
 }
 
 const TierSection: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const systems: Tier[] = [
     { ...t.systems.s1, icon: <Target className="w-10 h-10" />, style: 'bg-white text-black border-black' },
@@ -109,7 +109,7 @@ const TierSection: React.FC = () => {
         {/* Mobile Swipe Indicator */}
         <div className="lg:hidden flex justify-center space-x-2 mt-4">
            <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 animate-pulse">
-             ← {t.language === 'en' ? 'SWIPE TO COMPARE' : 'SWIPEZ POUR COMPARER'} →
+             ← {language === 'en' ? 'SWIPE TO COMPARE' : 'SWIPEZ POUR COMPARER'} →
            </div>
         </div>
       </div>
