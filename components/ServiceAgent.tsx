@@ -81,23 +81,23 @@ const ServiceAgent: React.FC = () => {
   };
 
   return (
-    <section id="terminal" className="py-24 lg:py-48 px-6 bg-white border-b-4 border-black">
+    <section id="terminal" className="py-16 lg:py-48 px-6 bg-white border-b-4 border-black">
       <div className="max-w-[1440px] mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-start">
           
           {/* Left Column: Copy */}
           <div className="space-y-10 order-2 lg:order-1">
-            <div className="flex items-center space-x-4 text-blue-600 font-black uppercase tracking-[0.3em] text-sm bg-blue-50 w-fit px-4 py-2 border border-blue-100">
+            <div className="flex items-center space-x-4 text-blue-600 font-black uppercase tracking-[0.3em] text-xs sm:text-sm bg-blue-50 w-fit px-4 py-2 border border-blue-100">
               <Calculator className="w-5 h-5" />
               <span>{language === 'en' ? 'Deployment Consultation Node' : 'Nœud de Consultation Déploiement'}</span>
             </div>
             
-            <h2 className="text-7xl sm:text-8xl lg:text-[100px] font-black text-slate-900 tracking-tighter uppercase leading-[0.8]">
+            <h2 className="text-5xl sm:text-7xl lg:text-[100px] font-black text-slate-900 tracking-tighter uppercase leading-[0.9] lg:leading-[0.8]">
               {language === 'en' ? 'Audit Your ' : 'Auditez Votre '}<br />
               <span className="text-blue-600">{language === 'en' ? 'Sales Cycle.' : 'Cycle de Vente.'}</span>
             </h2>
             
-            <p className="text-2xl text-slate-500 font-medium leading-relaxed max-w-xl">
+            <p className="text-xl sm:text-2xl text-slate-500 font-medium leading-relaxed max-w-xl">
               {language === 'en' 
                 ? "Reserved for established developers. We help you quantify the arbitrage of automated decision making versus manual waiting."
                 : "Réservé aux promoteurs établis. Nous vous aidons à quantifier l'arbitrage de la prise de décision automatisée versus l'attente manuelle."}
@@ -124,7 +124,7 @@ const ServiceAgent: React.FC = () => {
 
           {/* Right Column: Terminal */}
           <div className="relative order-1 lg:order-2">
-            <div className="bg-white border-4 border-black shadow-[20px_20px_0px_0px_rgba(0,0,0,1)] z-10 relative">
+            <div className="bg-white border-4 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] sm:shadow-[20px_20px_0px_0px_rgba(0,0,0,1)] z-10 relative">
               
               {/* Terminal Header */}
               <div className="flex items-center justify-between px-6 py-4 border-b-4 border-black bg-white">
@@ -141,14 +141,14 @@ const ServiceAgent: React.FC = () => {
               </div>
 
               {/* Terminal Body */}
-              <div className="h-[500px] flex flex-col relative overflow-hidden bg-slate-50">
+              <div className="h-[400px] sm:h-[500px] flex flex-col relative overflow-hidden bg-slate-50 max-h-[80vh]">
                 {!hasInteracted ? (
                   /* Initial Protocol State */
-                  <div className="absolute inset-0 p-8 sm:p-12 flex flex-col justify-center animate-in fade-in duration-500">
-                    <div className="border-4 border-black bg-white p-8 sm:p-10 space-y-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)]">
+                  <div className="absolute inset-0 p-6 sm:p-12 flex flex-col justify-center animate-in fade-in duration-500">
+                    <div className="border-4 border-black bg-white p-6 sm:p-10 space-y-6 sm:space-y-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)]">
                       <div className="flex items-center space-x-3 text-blue-600 border-b-2 border-blue-100 pb-4">
                         <AlertTriangle className="w-6 h-6" />
-                        <h3 className="text-xl font-black uppercase tracking-widest">
+                        <h3 className="text-lg sm:text-xl font-black uppercase tracking-widest">
                           {language === 'en' ? 'QUALIFICATION PROTOCOL' : 'PROTOCOLE DE QUALIFICATION'}
                         </h3>
                       </div>
@@ -172,10 +172,10 @@ const ServiceAgent: React.FC = () => {
                   </div>
                 ) : (
                   /* Chat History State */
-                  <div className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-6 scrollbar-hide">
+                  <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6 scrollbar-hide">
                     {messages.map((msg, idx) => (
                       <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                        <div className={`max-w-[85%] p-5 border-2 text-sm font-mono font-bold leading-relaxed shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)] ${
+                        <div className={`max-w-[85%] p-4 sm:p-5 border-2 text-sm font-mono font-bold leading-relaxed shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)] ${
                           msg.role === 'user' 
                             ? 'bg-blue-600 text-white border-blue-800' 
                             : 'bg-white text-black border-black'
@@ -231,7 +231,7 @@ const ServiceAgent: React.FC = () => {
                 )}
                 
                 {/* Input Area */}
-                <div className="mt-auto p-6 bg-white border-t-4 border-black">
+                <div className="mt-auto p-4 sm:p-6 bg-white border-t-4 border-black">
                   <div className="flex items-stretch space-x-0 shadow-[4px_4px_0px_0px_rgba(0,51,255,0.1)]">
                     <div className="flex-1 relative">
                        <input
@@ -240,13 +240,13 @@ const ServiceAgent: React.FC = () => {
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={handleKeyDown}
                         placeholder={t.terminal.placeholder}
-                        className="w-full h-full bg-white border-2 border-r-0 border-blue-600 p-4 pl-6 text-blue-900 font-mono text-sm font-bold focus:bg-blue-50 focus:outline-none placeholder:text-blue-300 transition-colors"
+                        className="w-full h-full bg-white border-2 border-r-0 border-blue-600 p-3 sm:p-4 pl-4 sm:pl-6 text-blue-900 font-mono text-sm font-bold focus:bg-blue-50 focus:outline-none placeholder:text-blue-300 transition-colors rounded-none"
                       />
                     </div>
                     <button 
                       onClick={handleSend}
                       disabled={loading || !input.trim()}
-                      className="bg-blue-600 text-white px-6 hover:bg-black transition-colors disabled:opacity-50 disabled:hover:bg-blue-600 border-2 border-blue-600"
+                      className="bg-blue-600 text-white px-4 sm:px-6 hover:bg-black transition-colors disabled:opacity-50 disabled:hover:bg-blue-600 border-2 border-blue-600"
                     >
                       {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                     </button>

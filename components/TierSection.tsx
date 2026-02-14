@@ -32,11 +32,11 @@ const TierSection: React.FC = () => {
   ];
 
   return (
-    <section id="pricing" className="py-32 px-6 bg-slate-50 border-b-4 border-black">
+    <section id="pricing" className="py-16 lg:py-32 px-6 bg-slate-50 border-b-4 border-black">
       <div className="max-w-[1440px] mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {systems.map((sys, idx) => (
-            <div key={idx} className={`border-4 p-8 sm:p-12 flex flex-col h-full relative ${sys.style} transition-transform hover:-translate-y-2`}>
+            <div key={idx} className={`border-4 p-6 sm:p-8 lg:p-12 flex flex-col h-full relative ${sys.style} transition-transform hover:-translate-y-2`}>
               
               {sys.badge && (
                 <div className="absolute top-0 right-0 bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2">
@@ -75,7 +75,7 @@ const TierSection: React.FC = () => {
                      <AlertTriangle className="w-3 h-3" />
                      <span>{sys.crisis_case.title}</span>
                    </div>
-                   <div className="space-y-3 text-base font-medium opacity-90 leading-relaxed">
+                   <div className="space-y-3 text-sm sm:text-base font-medium opacity-90 leading-relaxed">
                      <p><strong>{sys.crisis_case.scenario}</strong></p>
                      <p>{sys.crisis_case.action}</p>
                      <p className="font-bold underline">{sys.crisis_case.impact}</p>

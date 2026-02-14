@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { XCircle, Calculator, AlertTriangle } from 'lucide-react';
+import { Calculator, AlertTriangle } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 const QualificationCore: React.FC = () => {
@@ -35,21 +35,21 @@ const QualificationCore: React.FC = () => {
   };
 
   return (
-    <section id="diagnostic" className="py-32 px-6 bg-white border-b-4 border-black">
-      <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
+    <section id="diagnostic" className="py-16 lg:py-32 px-6 bg-white border-b-4 border-black">
+      <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
         
         {/* Left: The Trap Text */}
-        <div className="lg:col-span-5 space-y-12">
+        <div className="lg:col-span-5 space-y-8 lg:space-y-12">
           <div className="inline-flex items-center space-x-3 text-red-600 font-mono font-black uppercase tracking-widest text-sm">
             <AlertTriangle className="w-5 h-5" />
             <span>DIAGNOSTIC_01</span>
           </div>
           
-          <h2 className="text-5xl sm:text-6xl font-black text-black tracking-tighter uppercase leading-[0.9]">
+          <h2 className="text-4xl sm:text-6xl font-black text-black tracking-tighter uppercase leading-[0.9]">
             {t.diagnostic.title}
           </h2>
 
-          <div className="text-xl text-slate-800 font-medium leading-relaxed space-y-8">
+          <div className="text-lg sm:text-xl text-slate-800 font-medium leading-relaxed space-y-8">
             <p>{t.diagnostic.main}</p>
 
             <div className="bg-slate-50 border-l-4 border-red-600 p-6 space-y-4">
@@ -71,7 +71,7 @@ const QualificationCore: React.FC = () => {
               </li>
             </ul>
 
-            <div className="p-6 bg-black text-white italic font-serif text-xl leading-tight border-l-8 border-blue-600">
+            <div className="p-6 bg-black text-white italic font-serif text-lg sm:text-xl leading-tight border-l-8 border-blue-600">
               {t.diagnostic.quote}
             </div>
           </div>
@@ -79,10 +79,10 @@ const QualificationCore: React.FC = () => {
 
         {/* Right: The Calculator */}
         <div className="lg:col-span-7">
-          <div className="bg-black text-green-500 font-mono p-8 sm:p-12 border-4 border-slate-900 shadow-[24px_24px_0px_0px_rgba(255,0,0,0.1)]">
+          <div className="bg-black text-green-500 font-mono p-8 sm:p-12 border-4 border-slate-900 shadow-[16px_16px_0px_0px_rgba(255,0,0,0.1)] sm:shadow-[24px_24px_0px_0px_rgba(255,0,0,0.1)]">
             <div className="flex justify-between items-center mb-10 pb-4 border-b border-green-500/30">
-              <span className="text-xl font-black uppercase tracking-widest">{t.diagnostic.calc.header}</span>
-              <Calculator className="w-8 h-8 animate-pulse" />
+              <span className="text-lg sm:text-xl font-black uppercase tracking-widest">{t.diagnostic.calc.header}</span>
+              <Calculator className="w-6 h-6 sm:w-8 sm:h-8 animate-pulse" />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-12">
@@ -92,7 +92,7 @@ const QualificationCore: React.FC = () => {
                   type="number" 
                   value={price} 
                   onChange={(e) => setPrice(Number(e.target.value))}
-                  className="w-full bg-black border-b-2 border-green-900 text-white text-2xl focus:border-green-500 outline-none py-2"
+                  className="w-full bg-black border-b-2 border-green-900 text-white text-xl sm:text-2xl focus:border-green-500 outline-none py-2 rounded-none"
                 />
               </div>
               <div className="space-y-2">
@@ -101,7 +101,7 @@ const QualificationCore: React.FC = () => {
                   type="number" 
                   value={lots} 
                   onChange={(e) => setLots(Number(e.target.value))}
-                  className="w-full bg-black border-b-2 border-green-900 text-white text-2xl focus:border-green-500 outline-none py-2"
+                  className="w-full bg-black border-b-2 border-green-900 text-white text-xl sm:text-2xl focus:border-green-500 outline-none py-2 rounded-none"
                 />
               </div>
               <div className="space-y-2">
@@ -110,7 +110,7 @@ const QualificationCore: React.FC = () => {
                   type="number" 
                   value={cycle} 
                   onChange={(e) => setCycle(Number(e.target.value))}
-                  className="w-full bg-black border-b-2 border-green-900 text-white text-2xl focus:border-green-500 outline-none py-2"
+                  className="w-full bg-black border-b-2 border-green-900 text-white text-xl sm:text-2xl focus:border-green-500 outline-none py-2 rounded-none"
                 />
               </div>
               <div className="space-y-2">
@@ -119,21 +119,21 @@ const QualificationCore: React.FC = () => {
                   type="number" 
                   value={cost} 
                   onChange={(e) => setCost(Number(e.target.value))}
-                  className="w-full bg-black border-b-2 border-green-900 text-white text-2xl focus:border-green-500 outline-none py-2"
+                  className="w-full bg-black border-b-2 border-green-900 text-white text-xl sm:text-2xl focus:border-green-500 outline-none py-2 rounded-none"
                 />
               </div>
             </div>
 
             <div className="space-y-6 pt-6 border-t border-dashed border-green-900/50">
-              <div className="flex justify-between items-center text-red-500">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center text-red-500 gap-2">
                 <span className="text-sm font-bold uppercase">{t.diagnostic.calc.results.delay}</span>
                 <span className="text-3xl sm:text-4xl font-black">{formatCurrency(results.delayCost)}</span>
               </div>
-              <div className="flex justify-between items-center text-white">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center text-white gap-2">
                 <span className="text-sm font-bold uppercase">{t.diagnostic.calc.results.savings}</span>
                 <span className="text-3xl sm:text-4xl font-black">{formatCurrency(results.savings)}</span>
               </div>
-              <div className="flex justify-between items-center text-blue-500">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center text-blue-500 gap-2">
                 <span className="text-sm font-bold uppercase">{t.diagnostic.calc.results.velocity}</span>
                 <span className="text-3xl sm:text-4xl font-black">+{results.velocity} UNITS</span>
               </div>

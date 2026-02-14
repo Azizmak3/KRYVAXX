@@ -15,27 +15,27 @@ const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="py-32 px-6 border-t-8 border-black bg-white">
+    <footer className="py-16 lg:py-32 px-6 border-t-8 border-black bg-white">
       <div className="max-w-[1400px] mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-16 mb-24">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-16 mb-16 lg:mb-24">
           
           {/* Column 1: Brand */}
-          <div className="md:col-span-5 space-y-10">
+          <div className="md:col-span-5 space-y-8 lg:space-y-10">
             <div className="flex items-center">
-              <span className="text-4xl font-black tracking-tight text-black uppercase">KRYVAX</span>
+              <span className="text-3xl sm:text-4xl font-black tracking-tight text-black uppercase">KRYVAX</span>
             </div>
-            <div className="space-y-6">
-              <p className="max-w-md text-slate-900 text-xl font-black uppercase leading-tight">
+            <div className="space-y-4 lg:space-y-6">
+              <p className="max-w-md text-slate-900 text-lg sm:text-xl font-black uppercase leading-tight">
                 {language === 'en' ? 'AI Infrastructure for €2M-€20M Real Estate Developers.' : 'Infrastructure IA pour Promoteurs Immobiliers (2M€-20M€).'}
               </p>
-              <p className="max-w-sm text-slate-500 text-lg font-medium leading-relaxed">
+              <p className="max-w-sm text-slate-500 text-base sm:text-lg font-medium leading-relaxed">
                 {language === 'en' ? 'Stop renting tools. Start building survival infrastructure.' : 'Arrêtez de louer des outils. Construisez votre infrastructure de survie.'}
               </p>
             </div>
           </div>
           
           {/* Column 2: Resources */}
-          <div className="md:col-span-3 space-y-10">
+          <div className="md:col-span-3 space-y-8 lg:space-y-10">
             <h4 className="text-xs font-black uppercase tracking-[0.3em] text-slate-400">Resources</h4>
             <ul className="space-y-4 text-slate-900 text-sm font-black uppercase tracking-widest">
               <li><a href="#pricing" onClick={(e) => handleLinkClick(e, '#pricing')} className="hover:text-blue-700 transition-colors">{t.nav.whatWeBuild}</a></li>
@@ -45,7 +45,7 @@ const Footer: React.FC = () => {
           </div>
           
           {/* Column 3: Get Started */}
-          <div className="md:col-span-4 space-y-10">
+          <div className="md:col-span-4 space-y-8 lg:space-y-10">
             <h4 className="text-xs font-black uppercase tracking-[0.3em] text-slate-400">Actions</h4>
             <ul className="space-y-4 text-slate-900 text-sm font-black uppercase tracking-widest">
               <li>
@@ -80,7 +80,7 @@ const Footer: React.FC = () => {
         </div>
         
         {/* Bottom Bar */}
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center pt-16 border-t-4 border-slate-100 gap-8">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center pt-10 lg:pt-16 border-t-4 border-slate-100 gap-8">
           <div className="space-y-2">
             <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em]">
               © {new Date().getFullYear()} KRYVAX Systems. All rights reserved.
@@ -90,7 +90,7 @@ const Footer: React.FC = () => {
             </p>
           </div>
           
-          <div className="flex flex-wrap gap-10">
+          <div className="flex flex-wrap gap-6 lg:gap-10">
              <div className="flex items-center space-x-3">
                 <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.6)]" />
                 <span className="text-[10px] font-mono font-black text-slate-500 uppercase">SYSTEM_STATUS: ROI_NOMINAL</span>
