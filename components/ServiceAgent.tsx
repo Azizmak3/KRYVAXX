@@ -11,15 +11,24 @@ const ServiceAgent: React.FC = () => {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTo({
+        top: chatContainerRef.current.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
   };
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages, hasInteracted]);
+    // Add a small delay to ensure DOM update is complete
+    const timeoutId = setTimeout(() => {
+      scrollToBottom();
+    }, 100);
+    return () => clearTimeout(timeoutId);
+  }, [messages, hasInteracted, loading]);
 
   const handleSend = async () => {
     if (!input.trim() || loading) return;
@@ -172,7 +181,10 @@ const ServiceAgent: React.FC = () => {
                   </div>
                 ) : (
                   /* Chat History State */
-                  <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6 scrollbar-hide">
+                  <div 
+                    ref={chatContainerRef}
+                    className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6 scrollbar-hide"
+                  >
                     {messages.map((msg, idx) => (
                       <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                         <div className={`max-w-[85%] p-4 sm:p-5 border-2 text-sm font-mono font-bold leading-relaxed shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)] ${
@@ -226,7 +238,6 @@ const ServiceAgent: React.FC = () => {
                          </div>
                        </div>
                     )}
-                    <div ref={messagesEndRef} />
                   </div>
                 )}
                 

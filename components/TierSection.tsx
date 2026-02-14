@@ -32,11 +32,12 @@ const TierSection: React.FC = () => {
   ];
 
   return (
-    <section id="pricing" className="py-16 lg:py-32 px-6 bg-slate-50 border-b-4 border-black">
+    <section id="pricing" className="py-16 lg:py-32 px-6 bg-slate-50 border-b-4 border-black overflow-hidden">
       <div className="max-w-[1440px] mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* On mobile: Horizontal Scroll. On Desktop: Grid */}
+        <div className="flex flex-nowrap lg:grid lg:grid-cols-3 gap-8 overflow-x-auto snap-x snap-mandatory pb-8 lg:pb-0 -mx-6 px-6 lg:mx-0 lg:px-0 scrollbar-hide">
           {systems.map((sys, idx) => (
-            <div key={idx} className={`border-4 p-6 sm:p-8 lg:p-12 flex flex-col h-full relative ${sys.style} transition-transform hover:-translate-y-2`}>
+            <div key={idx} className={`min-w-[85vw] sm:min-w-[400px] lg:min-w-0 snap-center border-4 p-6 sm:p-8 lg:p-12 flex flex-col h-full relative ${sys.style} transition-transform hover:-translate-y-2`}>
               
               {sys.badge && (
                 <div className="absolute top-0 right-0 bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2">
@@ -47,7 +48,7 @@ const TierSection: React.FC = () => {
               <div className="mb-10">{sys.icon}</div>
               
               {/* HEADER: Title */}
-              <h3 className="text-2xl sm:text-3xl font-black uppercase tracking-tighter leading-none mb-6 min-h-[72px] flex items-end">
+              <h3 className="text-xl sm:text-2xl lg:text-3xl font-black uppercase tracking-tighter leading-tight mb-6 min-h-[72px] flex items-end break-words hyphens-auto w-full">
                 {sys.name}
               </h3>
 
@@ -104,6 +105,12 @@ const TierSection: React.FC = () => {
               </div>
             </div>
           ))}
+        </div>
+        {/* Mobile Swipe Indicator */}
+        <div className="lg:hidden flex justify-center space-x-2 mt-4">
+           <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 animate-pulse">
+             ← {t.language === 'en' ? 'SWIPE TO COMPARE' : 'SWIPEZ POUR COMPARER'} →
+           </div>
         </div>
       </div>
     </section>

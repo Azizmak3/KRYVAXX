@@ -39,6 +39,13 @@ const Header: React.FC<HeaderProps> = ({ onOpenScan }) => {
     { label: t.nav.whatWeBuild, id: 'pricing', path: '/systems' },
   ];
 
+  const mobileNavLinks = [
+    { label: language === 'en' ? 'HOME' : 'ACCUEIL', id: 'home', path: '/' },
+    ...navLinks,
+    { label: language === 'en' ? 'QUALIFICATION' : 'QUALIFICATION', id: 'qualification', path: '/qualification' },
+    { label: language === 'en' ? 'YOUR DECISION' : 'VOTRE DÉCISION', id: 'ultimatum', path: '/decision' },
+  ];
+
   const handleInitiateClick = () => {
     // Direct to the Lead Form (Blueprint section)
     window.history.pushState({}, '', '/audit');
@@ -102,9 +109,9 @@ const Header: React.FC<HeaderProps> = ({ onOpenScan }) => {
 
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
-        <div className={`lg:hidden fixed inset-0 top-full z-[90] overflow-y-auto animate-in fade-in slide-in-from-right duration-300 h-screen ${isScrolled ? 'bg-slate-900 text-white' : 'bg-white text-black'}`}>
+        <div className={`lg:hidden absolute top-full left-0 w-full h-screen z-[90] overflow-y-auto animate-in fade-in slide-in-from-right duration-300 border-t-4 border-black ${isScrolled ? 'bg-slate-900 text-white' : 'bg-white text-black'}`}>
           <div className="p-8 space-y-4 pb-32">
-            {navLinks.map((link, i) => (
+            {mobileNavLinks.map((link, i) => (
               <div key={i} className={`border-b ${isScrolled ? 'border-slate-700/20' : 'border-slate-100'} pb-4`}>
                 <a
                   href={link.path}
