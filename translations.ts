@@ -16,7 +16,7 @@ export const translations = {
       headline: 'YOUR\nCOMPETITORS\nSELL 40%\nFASTER.',
       subheadline: 'THEY DIDN\'T LOWER PRICES.\nTHEY AUTOMATED THE DECISION.',
       body: 'Right now, a developer on SeLoger Neuf closes in 6-8 months.\nYou\'re waiting 12-14 months. Same product. Same platform.\n\nThis isn\'t a price problem. It\'s a speed problem.',
-      cta: 'CALCULATE MY COMPETITIVE GAP →'
+      cta: 'CALCULATE MY COMPETITIVE GAP'
     },
     diagnostic: {
       title: 'THE SELOGER NEUF TRAP',
@@ -93,7 +93,7 @@ export const translations = {
         m3: 'Free 80% sales time for closing',
         roi: 'PROJECTED_ROI: 2-3 extra units sold = €200K-€400K net margin'
       },
-      cta: 'VIEW TECHNICAL ARCHITECTURE →'
+      cta: 'VIEW TECHNICAL ARCHITECTURE'
     },
     thesis: {
       title: 'WHY WINNERS INVEST DURING CRISES.',
@@ -123,7 +123,7 @@ export const translations = {
           impact: 'Impact: Save 40-60 sales hours/mo, sell 2-3 extra lots = €150K-€300K margin.'
         },
         roi: 'PAYBACK: 8-12 MONTHS',
-        cta: 'CHECK VOLUME ELIGIBILITY →'
+        cta: 'CHECK VOLUME ELIGIBILITY'
       },
       s2: {
         name: 'SYSTEM_02: DECISION_ACCELERATION',
@@ -139,7 +139,7 @@ export const translations = {
           impact: 'Impact: Reduces hesitation time by 3 months. Captures buyers before they visit competitors.'
         },
         roi: 'PAYBACK: 6-10 MONTHS',
-        cta: 'REQUEST AUDIT →'
+        cta: 'REQUEST AUDIT'
       },
       s3: {
         name: 'SYSTEM_03: TERRITORIAL_DOMINANCE',
@@ -154,7 +154,7 @@ export const translations = {
           impact: 'Impact: Become the primary option in the zone. Absorb competitor market share.'
         },
         roi: 'PAYBACK: 4-8 MONTHS',
-        cta: 'STRATEGY SESSION →'
+        cta: 'STRATEGY SESSION'
       }
     },
     filter: {
@@ -204,7 +204,6 @@ export const translations = {
       cta_secondary: 'Calculate Competitive Gap',
       fine: 'Limited availability: 3 deployments per quarter. Next cycle: Q1 2026.'
     },
-    // New Sections for WhatWeBuild / FAQ / Etc
     build: {
        opex: 'OPEX_REDUCTION',
        growth: 'EQUITY GROWTH',
@@ -324,7 +323,7 @@ export const translations = {
       headline: 'VOS\nCONCURRENTS\nVENDENT 40%\nPLUS VITE.',
       subheadline: 'ILS N\'ONT PAS BAISSÉ LES PRIX.\nILS ONT AUTOMATISÉ LA DÉCISION.',
       body: 'En ce moment, un promoteur sur SeLoger Neuf vend en 6-8 mois.\nVous attendez 12-14 mois. Même produit. Même plateforme.\n\nCe n\'est pas un problème de prix. C\'est un problème de vitesse.',
-      cta: 'CALCULER MON RETARD COMPÉTITIF →'
+      cta: 'CALCULER MON RETARD COMPÉTITIF'
     },
     diagnostic: {
       title: 'LE PIÈGE SELOGER NEUF',
@@ -401,7 +400,7 @@ export const translations = {
         m3: 'Libérer 80% du temps commercial pour closing',
         roi: 'ROI_PROJETÉ: 2-3 lots supplémentaires = 200K€-400K€ marge nette'
       },
-      cta: 'VOIR L\'ARCHITECTURE TECHNIQUE →'
+      cta: 'VOIR L\'ARCHITECTURE TECHNIQUE'
     },
     thesis: {
       title: 'POURQUOI LES GAGNANTS INVESTISSENT PENDANT LES CRISES.',
@@ -431,7 +430,7 @@ export const translations = {
           impact: 'Impact: Sur 12 mois, vous économisez 40-60 heures commerciales/mois et vendez 2-3 lots supplémentaires = 150K€-300K€ marge nette.'
         },
         roi: 'RÉCUPÉRATION: 8-12 MOIS',
-        cta: 'VOIR SI J\'AI LE VOLUME →'
+        cta: 'VOIR SI J\'AI LE VOLUME'
       },
       s2: {
         name: 'SYSTÈME_02: ACCÉLÉRATION_DÉCISIONNELLE',
@@ -447,7 +446,7 @@ export const translations = {
           impact: 'Impact: Réduit le temps d\'hésitation de 3 mois. Capture les acheteurs avant qu\'ils ne visitent la concurrence.'
         },
         roi: 'RÉCUPÉRATION: 6-10 MOIS',
-        cta: 'DEMANDER AUDIT →'
+        cta: 'DEMANDER AUDIT'
       },
       s3: {
         name: 'SYSTÈME_03: DOMINANCE_TERRITORIALE',
@@ -462,7 +461,7 @@ export const translations = {
           impact: 'Impact: Devenir l\'option primaire dans la zone. Absorber la part de marché des concurrents.'
         },
         roi: 'RÉCUPÉRATION: 4-8 MOIS',
-        cta: 'RÉSERVER SESSION →'
+        cta: 'RÉSERVER SESSION'
       }
     },
     filter: {
